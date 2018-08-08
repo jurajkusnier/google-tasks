@@ -1,7 +1,8 @@
-package com.jurajkusnier.googletasks
+package com.jurajkusnier.googletasks.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.jurajkusnier.googletasks.R
 
 class MainActivity : AppCompatActivity() {
 
