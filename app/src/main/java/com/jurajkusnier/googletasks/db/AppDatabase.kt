@@ -5,6 +5,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.sqlite.db.SupportSQLiteDatabase
+import com.jurajkusnier.googletasks.R
+import java.util.concurrent.Executors
 
 @Database(entities = [TaskList::class, Task::class, Subtask::class],version = 1)
 @TypeConverters(value = [DateConverter::class])
@@ -15,18 +18,34 @@ abstract class AppDatabase: RoomDatabase() {
     abstract fun getSubtaskDao(): SubtaskDao
 
     companion object {
-
-        private var db:AppDatabase? = null
+        val TAG = AppDatabase::class.java.simpleName
         private const val databaseName = "tasks.db"
 
-        fun getInstance(context: Context):AppDatabase {
-            if (db == null) {
-                db = Room.databaseBuilder(context, AppDatabase::class.java, databaseName).build()
-            }
+        @Volatile private var instance: AppDatabase? = null
 
-            return db ?: throw NullPointerException("Can't instantiate Database")
+        fun getInstance(context: Context): AppDatabase {
+
+            return instance ?: synchronized(this) {
+                instance = buildPrePopulatedDatabase(context)
+                instance ?: throw IllegalAccessException("Can't instantiate class $TAG")
+            }
         }
 
+        private fun buildPrePopulatedDatabase(context: Context):AppDatabase =
+            Room.databaseBuilder(context, AppDatabase::class.java, databaseName)
+                    .addCallback(object: Callback() {
+                        override fun onCreate(db: SupportSQLiteDatabase) {
+                            super.onCreate(db)
+
+                            val defaultTaskListName = context.getString(R.string.default_task_list_name)
+
+                            Executors.newSingleThreadScheduledExecutor().execute {
+                                getInstance(context).getTaskListDao().insert(TaskList(defaultTaskListName))
+                            }
+                        }
+
+                    })
+                    .build()
     }
 
 }

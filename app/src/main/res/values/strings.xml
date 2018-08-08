@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">GoogleTasks</string>
+    <string name="default_task_list_name">My Tasks</string>
 </resources>

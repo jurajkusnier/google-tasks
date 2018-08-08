@@ -27,15 +27,22 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
+    implementation 'androidx.appcompat:appcompat:1.0.0-rc01'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.0-alpha3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha3'
+    androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
 
-    //LiveData
-    implementation 'androidx.lifecycle:lifecycle-livedata-core:2.0.0-rc01'
-    implementation 'androidx.lifecycle:lifecycle-livedata:2.0.0-rc01'
+    // ViewModel and LiveData
+    implementation "androidx.lifecycle:lifecycle-extensions:2.0.0-rc01"
+//
+//
+//    //LiveData
+//    implementation 'androidx.lifecycle:lifecycle-livedata-core:2.0.0-rc01'
+//    implementation 'androidx.lifecycle:lifecycle-livedata:2.0.0-rc01'
+//
+//    //ViewModel
+//    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.0.0-rc01'
+//    kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0-rc01'
 
     //RxJava
     implementation 'io.reactivex.rxjava2:rxjava:2.2.0'
@@ -49,5 +56,10 @@ dependencies {
     //Tests
     testImplementation "org.mockito:mockito-core:2.19.0"
     androidTestImplementation 'androidx.arch.core:core-testing:2.0.0-rc01'
+
+    //Material Design
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
+    implementation 'com.google.android.material:material:1.0.0-rc01'
+    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.0.0-rc01'
 
 }
