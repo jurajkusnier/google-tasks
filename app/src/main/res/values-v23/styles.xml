@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="@style/Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <!-- Transparent status bar -->
+        <item name="android:statusBarColor">@color/status_bar</item>
+
+        <!-- Dark status bar icons -->
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="BottomSheetTasksListStyle">
+        <!-- Dialog is Fullscreen -->
+        <item name="android:windowIsFloating">false</item>
+
+        <!-- Dialog has transparent background -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+
+        <!-- Dark Background under dialog -->
+        <item name="android:backgroundDimEnabled">true</item>
+
+        <!-- Dark status bar icons -->
+        <item name="android:windowLightStatusBar">true</item>
+
+    </style>
+</resources>

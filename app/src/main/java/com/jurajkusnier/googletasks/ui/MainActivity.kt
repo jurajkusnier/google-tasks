@@ -2,7 +2,9 @@ package com.jurajkusnier.googletasks.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
+import android.view.WindowManager
 import com.jurajkusnier.googletasks.R
 import com.jurajkusnier.googletasks.ui.taskslist.BottomSheetTasksList
 import kotlinx.android.synthetic.main.activity_main.*

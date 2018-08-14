@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">GoogleTasks</string>
     <string name="default_task_list_name">My Tasks</string>
+    <string name="create_list">Create new list</string>
+    <string name="send_feedback">Send feedback</string>
+    <string name="tasks_list">Tasks List</string>
+
+    <string name="bullet_separator">•</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="terms_of_service">Terms of Service</string>
 </resources>

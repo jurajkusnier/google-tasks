@@ -6,6 +6,45 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <!-- Elements appear under semi-transparent status bar -->
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
+    <style name="BaseFooterActionItemStyle">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/google_grey800</item>
+    </style>
+    <style name="FooterActionItemStyle" parent="@style/BaseFooterActionItemStyle" />
+    <style name="FooterClickableActionItemStyle" parent="@style/FooterActionItemStyle">
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+    </style>
+
+    <style name="DividerStyle">
+        <item name="android:background">@color/account_menu_divider_color</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+    </style>
+
+    <style name="NavigationViewStyle" >
+        <item name="android:listDivider">@color/colorDivider</item>
+        <item name="itemBackground">@drawable/navigation_item_background</item>
+        <item name="itemTextColor">@color/navigation_item_color</item>
+    </style>
+
+    <style name="BottomSheetTasksListStyle">
+        <!-- Dialog is Fullscreen -->
+        <item name="android:windowIsFloating">false</item>
+
+        <!-- Dialog has transparent background -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+
+        <!-- Elements appear under semi-transparent status bar -->
+        <item name="android:windowIsTranslucent">true</item>
+
+        <!-- Dark Background under dialog -->
+        <item name="android:backgroundDimEnabled">true</item>
     </style>
 
 </resources>

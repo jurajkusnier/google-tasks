@@ -7,7 +7,7 @@ import com.jurajkusnier.googletasks.db.TaskList
 import com.jurajkusnier.googletasks.taskslist.TasksListRepository
 import io.reactivex.disposables.Disposable
 
-class BottomSheetTasksListViewModel(tasksListRepository: TasksListRepository) : ViewModel() {
+class BottomSheetTasksListViewModel(val tasksListRepository: TasksListRepository) : ViewModel() {
 
     private val _tasksList:MutableLiveData<List<TaskList>> = MutableLiveData()
     val taskList:LiveData<List<TaskList>>
@@ -19,6 +19,14 @@ class BottomSheetTasksListViewModel(tasksListRepository: TasksListRepository) : 
         disposable = tasksListRepository.getTasksList()?.subscribe {
             _tasksList.postValue( it)
         }
+    }
+
+    fun insertTaskList(taskList: TaskList) {
+        tasksListRepository.insertTaskList(taskList)
+    }
+
+    fun deleteTaskList(taskList:TaskList) {
+        tasksListRepository.deleteTaskList(taskList)
     }
 
     override fun onCleared() {

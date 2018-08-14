@@ -9,9 +9,29 @@
 
     <com.google.android.material.bottomappbar.BottomAppBar
             android:id="@+id/bottomBar"
+            android:background="@color/colorBackground"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             app:navigationIcon="@drawable/ic_menu"/>
+
+    <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            android:id="@+id/frameTest"
+    >
+        <TextView
+                android:text="TEST"
+                android:textStyle="bold"
+                android:textSize="30sp"
+                android:fitsSystemWindows="false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+        />
+
+    </FrameLayout>
+
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
