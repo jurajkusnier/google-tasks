@@ -37,7 +37,6 @@ class TestDatabaseDao {
         calendar.set(2018,11,1)
         mDate = calendar.time
 
-        val thisDate = calendar.time
         val context = InstrumentationRegistry.getTargetContext()
         mDb = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).allowMainThreadQueries().build()
     }
