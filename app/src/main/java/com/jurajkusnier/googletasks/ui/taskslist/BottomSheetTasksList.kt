@@ -1,16 +1,15 @@
 package com.jurajkusnier.googletasks.ui.taskslist
 
-import android.app.Activity
 import android.app.Application
 import android.app.Dialog
-import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
-import android.os.Build
 import android.os.Bundle
-import android.util.DisplayMetrics
+import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -18,86 +17,59 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.jurajkusnier.googletasks.R
 import com.jurajkusnier.googletasks.SharedPreferencesHelper
 import com.jurajkusnier.googletasks.db.TaskList
+import com.jurajkusnier.googletasks.ui.MainActivity
+import com.jurajkusnier.googletasks.ui.getScreenHeight
 import com.jurajkusnier.googletasks.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.navigation_view_tasks_lists.*
 import kotlin.math.roundToInt
 
-
-fun Activity.getScreenHeight():Int {
-    val displayMetrics = DisplayMetrics()
-    windowManager.defaultDisplay.getMetrics(displayMetrics)
-    return displayMetrics.heightPixels
-}
-
 class BottomSheetTasksList: AppCompatDialogFragment() {
 
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+
+        //Get resources
         val staturBarIdentifier = resources.getIdentifier("status_bar_height", "dimen", "android")
         val statusBarHeight = if (staturBarIdentifier != 0) resources.getDimensionPixelSize(staturBarIdentifier) else 0
         val cornerRadiusStart = resources.getDimension(R.dimen.bottom_sheet_corner_radius)
         val bottomSheetImageMinimalHeight = resources.getDimension(R.dimen.bottom_sheet_decoration_minimal_height)
+        val headerElevation = resources.getDimension(R.dimen.header_elevation)
+        val backgroundColor = ResourcesCompat.getColor(resources, R.color.colorBackground, null)
 
+        //Create dialog
         val dialog = Dialog(activity,R.style.BottomSheetTasksListStyle)
-
         dialog.setContentView(R.layout.navigation_view_tasks_lists)
 
-        dialog.window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS) //Allows dialog under status bar
+        //Extends dialog on whole screen (also under status bar)
+        dialog.window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
-        val navigationView = dialog.navigationViewTasksLists
-        val nestedStrollView = dialog.nestedScrollViewTasksLists
+        var tasksLists:List<TaskList>? = null
 
-        nestedStrollView.setOnScrollChangeListener { v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                dialog.appBarTasksLists.elevation = if (scrollY == 0) {
-                    0f
-                } else {
-                    15f
-                }
-            }
-        }
-
+        //Observe Tasks List from DB and add it to NavigationView
         viewModel.taskList.observe(this, Observer {
 
-            tasksList = it
+            tasksLists = it
 
-            val menu = navigationView.menu
+            val menu = dialog.navigationViewTasksLists.menu
 
             menu.clear()
 
             val selectedList = preferencesHelper.selectedTaskList
 
             for ((index,taskList) in  it.withIndex()) {
-                menu.add(0,index+2,index, taskList.listName).setCheckable(true).isChecked = (taskList.id == selectedList || index == 0)
+                menu.add(0,index+MENU_LIST_ITEM_FIRST_INDEX,index, taskList.listName).setCheckable(true).isChecked = (taskList.id == selectedList || index == 0)
             }
 
-            menu.add(1,0,it.size,R.string.create_list).setIcon(R.drawable.ic_add)
-            menu.add(2,1,it.size + 1,R.string.send_feedback).setIcon(R.drawable.ic_feedback)
+            menu.add(1, ID_MENU_NEW, it.size,R.string.create_list).setIcon(R.drawable.ic_add)
+            menu.add(2, ID_MENU_FEEDBACK,it.size + 1,R.string.send_feedback).setIcon(R.drawable.ic_feedback)
 
-            navigationView.invalidate()
+            dialog.navigationViewTasksLists.invalidate()
         })
 
-        navigationView.setNavigationItemSelectedListener {
 
-            when(it.itemId) {
-                0 -> viewModel.insertTaskList(TaskList("My Task List (${System.currentTimeMillis() % 1000})"))
-                1 -> {}
-//                 TODO: selection is changed for delete, only for testing
-//                else -> preferencesHelper.selectedTaskList =  tasksList?.get(it.itemId - 2)?.id ?: 0
-                else -> {
-                    val task = tasksList?.get(it.itemId -2)
-                    if (task != null) {
-                        viewModel.deleteTaskList(task)
-                    }
-                }
-            }
-
-            true
-        }
 
         val behaviour = BottomSheetBehavior.from(dialog.bottomSheetLayout)
 
+        //Setup peekHeight to 50% of the screen
         val screenHeight = activity?.getScreenHeight()
         if (screenHeight != null) behaviour.peekHeight = (screenHeight * 0.5f).roundToInt() + statusBarHeight
 
@@ -119,27 +91,90 @@ class BottomSheetTasksList: AppCompatDialogFragment() {
 
                 val drawable = GradientDrawable()
                 val newRadius = (1f - interpolator) * cornerRadiusStart
-                val f = floatArrayOf(newRadius,newRadius,newRadius,newRadius,0f,0f,0f,0f)
-                drawable.cornerRadii = f
-                drawable.setColor(Color.WHITE)
+                drawable.cornerRadii = floatArrayOf(newRadius,newRadius,newRadius,newRadius,0f,0f,0f,0f)
+                drawable.setColor(backgroundColor)
 
                 dialog.imageBackground.setImageDrawable(drawable)
 
             }
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-
                 if (newState == BottomSheetBehavior.STATE_HIDDEN) {
                     dialog.cancel()
                 }
             }
         })
 
+        //Hide bottom sheet before close
+        fun hideBottomSheet() {
+            behaviour.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        dialog.navigationViewTasksLists.setNavigationItemSelectedListener {
+
+            when(it.itemId) {
+                ID_MENU_NEW -> {
+                    (activity as MainActivity).showNewTaskListFragment()
+                    hideBottomSheet()
+                }
+//                    viewModel.insertTaskList(TaskList("My Task List (${System.currentTimeMillis() % 1000})"))
+                        ID_MENU_FEEDBACK -> showNotImplemented()
+
+//                 TODO: selection is changed for delete, only for testing
+
+//                else -> preferencesHelper.selectedTaskList =  tasksList?.get(it.itemId - 2)?.id ?: 0
+                else -> {
+                    val task = tasksLists?.get(it.itemId - MENU_LIST_ITEM_FIRST_INDEX)
+                    if (task != null) {
+                        viewModel.deleteTaskList(task)
+                    }
+                }
+            }
+
+            true
+        }
+
+        //Add elevation to header when scrolling
+        dialog.nestedScrollViewTasksLists.setOnScrollChangeListener { v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
+            dialog.appBarTasksLists.elevation = if (scrollY == 0) 0f else headerElevation
+        }
+
+        dialog.setOnKeyListener { dialog, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                hideBottomSheet()
+                true
+            }
+            false
+        }
+
+        dialog.coordinatorLayout.setOnClickListener {
+            hideBottomSheet()
+        }
+
+        dialog.close_button.setOnClickListener {
+            hideBottomSheet()
+        }
+
+        dialog.privacy_policy.setOnClickListener {
+            showNotImplemented()
+        }
+
+        dialog.terms_of_service.setOnClickListener {
+            showNotImplemented()
+        }
+
         return dialog
+    }
+
+    private fun showNotImplemented() {
+        Toast.makeText(activity,getString(R.string.not_implemented),Toast.LENGTH_SHORT).show()
     }
 
     companion object {
         val TAG = BottomSheetTasksList::class.java.simpleName
+        val ID_MENU_NEW = 0
+        val ID_MENU_FEEDBACK = 1
+        val MENU_LIST_ITEM_FIRST_INDEX = 2
     }
 
     private val preferencesHelper: SharedPreferencesHelper by lazy {
@@ -150,7 +185,4 @@ class BottomSheetTasksList: AppCompatDialogFragment() {
         val viewModelFactory = ViewModelFactory.getInstance(context?.applicationContext as Application)
         ViewModelProviders.of(this, viewModelFactory).get(BottomSheetTasksListViewModel::class.java)
     }
-
-    var tasksList:List<TaskList>? = null
-
 }

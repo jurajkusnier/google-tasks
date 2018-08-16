@@ -37,6 +37,7 @@
                         android:layout_marginStart="16dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@id/tasks_list_caption"
+                        app:layout_constraintBottom_toBottomOf="@id/tasks_list_caption"
 
                         android:src="@drawable/ic_check_circle"
                         android:id="@+id/image_task_list_app_icon"
@@ -47,7 +48,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingStart="20dp"
-                        android:paddingBottom="20dp"
+                        android:paddingEnd="20dp"
+                        android:layout_marginBottom="20dp"
                         app:layout_constraintStart_toEndOf="@id/image_task_list_app_icon"
                         app:layout_constraintBottom_toBottomOf="parent"
                         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"

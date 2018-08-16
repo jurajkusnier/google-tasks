@@ -2,4 +2,5 @@
 <resources>
     <dimen name="bottom_sheet_corner_radius">8dp</dimen>
     <dimen name="bottom_sheet_decoration_minimal_height">20dp</dimen>
+    <dimen name="header_elevation">8dp</dimen>
 </resources>
