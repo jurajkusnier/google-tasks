@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/colorPrimary</item>
 
         <!-- Elements appear under semi-transparent status bar -->
         <item name="android:windowTranslucentStatus">true</item>
@@ -45,6 +46,19 @@
 
         <!-- Dark Background under dialog -->
         <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+    <style name="ThemeOverlay.GoogleMaterial.Dark.ActionBar" parent="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar" />
+
+    <style name="AppTheme.AppBarOverlay" parent="@style/ThemeOverlay.GoogleMaterial.Dark.ActionBar">
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="actionMenuTextAppearance">@style/CustomToolbarMenuTextAppearance</item>
+        <item name="actionMenuTextColor">@color/google_blue600</item>
+    </style>
+
+    <style name="CustomToolbarMenuTextAppearance" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/google_blue600</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
 </resources>

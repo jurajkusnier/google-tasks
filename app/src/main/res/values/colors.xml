@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">@android:color/white</color>
+    <color name="colorPrimaryDark">@android:color/black</color>
+    <color name="colorAccent">@color/google_blue600</color>
 
-    <color name="colorDivider">#E0E0E0</color>
-
-    <color name="account_menu_divider_color">#ffe8eaed</color>
-
+    <!-- Material Design Colors -->
     <color name="google_blue100">#ffd2e3fc</color>
     <color name="google_blue50" >#ffe8f0fe</color>
     <color name="google_blue500">#ff4285f4</color>
@@ -28,9 +25,14 @@
     <color name="google_red600" >#ffd93025</color>
 
     <color name="google_transparent">#00000000</color>
-
     <color name="status_bar">@color/google_transparent</color>
-
     <color name="colorBackground">@android:color/white</color>
+    <color name="editTaskListBackground">@color/google_grey200</color>
+    <color name="textColorPrimary">@color/material_grey_900</color>
+    <color name="bottom_shadow_end">@android:color/transparent</color>
+    <color name="bottom_shadow_start">#18000000</color>
+    <color name="colorDivider">#E0E0E0</color>
+    <color name="account_menu_divider_color">#ffe8eaed</color>
+
 
 </resources>

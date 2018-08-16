@@ -5,7 +5,38 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
         tools:context=".ui.MainActivity">
+
+        <com.google.android.material.appbar.AppBarLayout android:layout_width="match_parent"
+                                                         android:theme="@style/AppTheme.AppBarOverlay"
+                                                         android:layout_height="wrap_content"
+                                                         app:elevation="0dp"
+        >
+            <androidx.appcompat.widget.Toolbar android:layout_width="match_parent"
+                                               android:id="@+id/toolbar"
+                                               android:visibility="visible"
+
+                                               android:layout_height="wrap_content">
+
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollable_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <FrameLayout
+                android:id="@+id/fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+    </androidx.core.widget.NestedScrollView>
+
+
 
     <com.google.android.material.bottomappbar.BottomAppBar
             android:id="@+id/bottomBar"
@@ -15,10 +46,20 @@
             android:layout_gravity="bottom"
             app:navigationIcon="@drawable/ic_menu"/>
 
+    <View
+            android:layout_gravity="top"
+            android:id="@+id/bottom_app_bar_shadow"
+            android:background="@drawable/bottom_app_bar_shadow"
+            android:layout_width="fill_parent"
+            android:layout_height="4dp"
+            app:layout_anchor="@id/bottomBar"
+            app:layout_anchorGravity="top" />
+
     <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
+            android:visibility="gone"
             android:id="@+id/frameTest"
     >
         <TextView

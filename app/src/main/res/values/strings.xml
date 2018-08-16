@@ -8,4 +8,11 @@
     <string name="bullet_separator">•</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="terms_of_service">Terms of Service</string>
+    <string name="not_implemented">Not implemented</string>
+
+    <string name="list_title_hint">Enter list title</string>
+
+    <string name="done">Done</string>
+    <string name="edit_list">Rename list</string>
+
 </resources>

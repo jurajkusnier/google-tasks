@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        android:orientation="vertical"
+        android:background="@color/editTaskListBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+    <View style="@style/DividerStyle"  />
+    <EditText
+            android:imeOptions="actionDone"
+            android:textColorHint="@color/google_grey600"
+            android:id="@+id/edit_list_title"
+            android:background="@android:color/white"
+            android:layout_width="match_parent"
+            android:textStyle="bold"
+            android:layout_height="wrap_content"
+            android:hint="@string/list_title_hint"
+            android:maxLines="1"
+            android:inputType="text"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="17dp" />
+    <View style="@style/DividerStyle"  />
+</LinearLayout>
