@@ -6,8 +6,10 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.jurajkusnier.googletasks.R
 import com.jurajkusnier.googletasks.db.TaskList
+import com.jurajkusnier.googletasks.ui.taskslist.AddListFragment
 import com.jurajkusnier.googletasks.ui.taskslist.BottomSheetTasksList
 import com.jurajkusnier.googletasks.ui.taskslist.EditListFragment
+import com.jurajkusnier.googletasks.ui.taskslist.TasksListFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(){
@@ -22,11 +24,11 @@ class MainActivity : AppCompatActivity(){
     override fun onResume() {
         super.onResume()
 
-        //Check current fragment
+        //Setup toolbars for currently loaded fragment
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
-        if (currentFragment is EditListFragment) {
+        if (currentFragment is TasksListFragment) {
             hideBottomAppBar()
-            showEditTaskListToolbar(currentFragment)
+            showTaskListToolbar(currentFragment)
         } else {
             showBottomAppBar()
         }
@@ -51,30 +53,37 @@ class MainActivity : AppCompatActivity(){
 
 
     fun showNewTaskListFragment() {
-        val editListFragment = EditListFragment()
+        val addListFragment = AddListFragment()
+        showTaskListFragment(addListFragment )
+    }
 
+    fun showEditTaskListFragment(taskList: TaskList) {
+        val editListFragment = EditListFragment.getInstance(taskList)
+        showTaskListFragment(editListFragment)
+    }
+
+    private fun showTaskListFragment(tasksListFragment: TasksListFragment) {
         hideBottomAppBar()
-        showEditTaskListToolbar(editListFragment)
+        showTaskListToolbar(tasksListFragment)
 
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.fragment_container, editListFragment)
+        transaction.replace(R.id.fragment_container, tasksListFragment)
         transaction.addToBackStack(null)
         transaction.commit()
     }
 
-    fun editTaskListFragment(taskList: TaskList) {
-
-    }
-
-    private fun showEditTaskListToolbar(editListFragment:EditListFragment) {
+    private fun showTaskListToolbar(fragment:TasksListFragment) {
         toolbar.visibility = View.VISIBLE
         toolbar.menu.clear()
         toolbar.inflateMenu(R.menu.task_list_edit)
-        toolbar.title =  getString(R.string.edit_list)
+        toolbar.title =  if (fragment is EditListFragment)
+            getString(R.string.list_edit_title)
+        else
+            getString(R.string.list_add_title)
 
         toolbar.setNavigationIcon(R.drawable.ic_close)
         toolbar.setOnMenuItemClickListener {
-            editListFragment.insertTasksList()
+            fragment.insertTasksList()
             onBackPressed()
             true
         }

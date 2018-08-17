@@ -117,17 +117,16 @@ class BottomSheetTasksList: AppCompatDialogFragment() {
                     (activity as MainActivity).showNewTaskListFragment()
                     hideBottomSheet()
                 }
-//                    viewModel.insertTaskList(TaskList("My Task List (${System.currentTimeMillis() % 1000})"))
-                        ID_MENU_FEEDBACK -> showNotImplemented()
-
-//                 TODO: selection is changed for delete, only for testing
-
-//                else -> preferencesHelper.selectedTaskList =  tasksList?.get(it.itemId - 2)?.id ?: 0
+                ID_MENU_FEEDBACK -> showNotImplemented()
                 else -> {
                     val task = tasksLists?.get(it.itemId - MENU_LIST_ITEM_FIRST_INDEX)
                     if (task != null) {
-                        viewModel.deleteTaskList(task)
+                        //TODO: edit task list only for testing
+                        (activity as MainActivity).showEditTaskListFragment(task)
+
+                        preferencesHelper.selectedTaskList =  task.id
                     }
+                    hideBottomSheet()
                 }
             }
 

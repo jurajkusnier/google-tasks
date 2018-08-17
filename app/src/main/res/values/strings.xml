@@ -13,6 +13,7 @@
     <string name="list_title_hint">Enter list title</string>
 
     <string name="done">Done</string>
-    <string name="edit_list">Rename list</string>
+    <string name="list_edit_title">Rename list</string>
+    <string name="list_add_title">Create new list</string>
 
 </resources>
