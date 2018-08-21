@@ -1,15 +1,14 @@
 package com.jurajkusnier.googletasks.ui
 
 import android.os.Bundle
+import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.jurajkusnier.googletasks.R
 import com.jurajkusnier.googletasks.db.TaskList
-import com.jurajkusnier.googletasks.ui.taskslist.AddListFragment
-import com.jurajkusnier.googletasks.ui.taskslist.BottomSheetTasksList
-import com.jurajkusnier.googletasks.ui.taskslist.EditListFragment
-import com.jurajkusnier.googletasks.ui.taskslist.TasksListFragment
+import com.jurajkusnier.googletasks.ui.taskslist.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(){
@@ -19,6 +18,7 @@ class MainActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setSupportActionBar(bottomBar)
     }
 
     override fun onResume() {
@@ -34,10 +34,20 @@ class MainActivity : AppCompatActivity(){
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.bottom_bar_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        Log.d(TAG,"onOptionsItemSelected($item)")
         return when (item?.itemId) {
             android.R.id.home -> {
                 BottomSheetTasksList().show(supportFragmentManager, BottomSheetTasksList.TAG)
+                true
+            }
+            R.id.action_more_options -> {
+                BottomBarMenu().show(supportFragmentManager,BottomBarMenu.TAG)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -101,17 +111,6 @@ class MainActivity : AppCompatActivity(){
     private fun showBottomAppBar() {
         bottom_app_bar_shadow.visibility = View.VISIBLE
         bottomBar.visibility = View.VISIBLE
-        setSupportActionBar(bottomBar)
-
-        bottomBar.setOnMenuItemClickListener {
-            when(it.itemId) {
-                android.R.id.home -> {
-                    BottomSheetTasksList().show(supportFragmentManager, BottomSheetTasksList.TAG)
-                    true
-                }
-                else -> false
-            }
-        }
     }
 
 

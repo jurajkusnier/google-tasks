@@ -12,6 +12,9 @@
 
         <!-- Dark status bar icons -->
         <item name="android:windowLightStatusBar">true</item>
+
+        <!--Style used in custom view CheckOptionItem -->
+        <item name="optionItemStyle">@style/OptionItem</item>
     </style>
 
     <style name="BottomSheetTasksListStyle">

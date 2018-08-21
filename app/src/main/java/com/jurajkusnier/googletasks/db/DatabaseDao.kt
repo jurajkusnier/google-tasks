@@ -2,6 +2,7 @@ package com.jurajkusnier.googletasks.db
 
 import androidx.room.*
 import io.reactivex.Flowable
+import io.reactivex.Maybe
 
 @Dao
 interface TaskDao {
@@ -22,11 +23,14 @@ interface TaskDao {
 
 @Dao
 interface TaskListDao {
+    @Query("SELECT * FROM TaskList WHERE ID = :id")
+    fun findTaskListsById(id:Int):Maybe<TaskList>
+
     @Query("SELECT * FROM TaskList")
     fun getTaskLists():Flowable<List<TaskList>>
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
-    fun insert(taskList: TaskList)
+    fun insert(taskList: TaskList):Long
 
     @Delete
     fun delete(taskList: TaskList)

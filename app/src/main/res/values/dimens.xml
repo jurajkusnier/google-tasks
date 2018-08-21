@@ -3,4 +3,8 @@
     <dimen name="bottom_sheet_corner_radius">8dp</dimen>
     <dimen name="bottom_sheet_decoration_minimal_height">20dp</dimen>
     <dimen name="header_elevation">8dp</dimen>
+    <dimen name="option_item_horiz_spacing">24dp</dimen>
+    <dimen name="option_item_vertical_spacing">16dp</dimen>
+    <dimen name="small_font_size">14sp</dimen>
+    <dimen name="snackbar_bottom_margin">90dp</dimen>
 </resources>

@@ -18,6 +18,7 @@ abstract class AppDatabase: RoomDatabase() {
     abstract fun getSubtaskDao(): SubtaskDao
 
     companion object {
+        const val FIRST_ITEM_ID = 1
         val TAG = AppDatabase::class.java.simpleName
         private const val databaseName = "tasks.db"
 
@@ -40,7 +41,7 @@ abstract class AppDatabase: RoomDatabase() {
                             val defaultTaskListName = context.getString(R.string.default_task_list_name)
 
                             Executors.newSingleThreadScheduledExecutor().execute {
-                                getInstance(context).getTaskListDao().insert(TaskList(defaultTaskListName))
+                                getInstance(context).getTaskListDao().insert(TaskList(FIRST_ITEM_ID,defaultTaskListName))
                             }
                         }
 

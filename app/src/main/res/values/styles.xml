@@ -10,6 +10,9 @@
 
         <!-- Elements appear under semi-transparent status bar -->
         <item name="android:windowTranslucentStatus">true</item>
+
+        <!--Style used in custom view CheckOptionItem -->
+        <item name="optionItemStyle">@style/OptionItem</item>
     </style>
 
     <style name="BaseFooterActionItemStyle">
@@ -59,6 +62,45 @@
     <style name="CustomToolbarMenuTextAppearance" parent="@android:style/TextAppearance.Small">
         <item name="android:textColor">@color/google_blue600</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="BottomSheetModalDialog" parent="@style/Theme.Design.Light.BottomSheetDialog">
+        <item name="android:textColor">@color/google_grey800</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="bottomSheetStyle">@style/Widget.GoogleMaterial.BottomSheet.Modal</item>
+    </style>
+
+    <style name="Widget.GoogleMaterial.BottomSheet.Modal" parent="@style/Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="android:background">@drawable/bottom_sheet_dialog_fragment_background</item>
+    </style>
+
+    <style name="OptionItemTextAppearance" parent="@android:style/TextAppearance.Small">
+        <item name="android:textSize">@dimen/small_font_size</item>
+    </style>
+    <style name="OptionItem">
+        <item name="android:textAppearance">@style/OptionItemTextAppearance</item>
+        <item name="android:background">?selectableItemBackground</item>
+        <item name="android:paddingLeft">@dimen/option_item_horiz_spacing</item>
+        <item name="android:paddingTop">@dimen/option_item_vertical_spacing</item>
+        <item name="android:paddingRight">@dimen/option_item_horiz_spacing</item>
+        <item name="android:paddingBottom">@dimen/option_item_vertical_spacing</item>
+        <item name="android:textColor">@drawable/text_color</item>
+    </style>
+    <style name="BottomSheetMenu">
+        <item name="android:paddingTop">@dimen/option_item_vertical_spacing</item>
+        <item name="android:paddingBottom">@dimen/option_item_vertical_spacing</item>
+    </style>
+    <style name="OptionMenuTitle">
+        <item name="android:textAppearance">@style/OptionMenuTitleTextAppearance</item>
+        <item name="android:textColor">@color/google_grey700</item>
+        <item name="android:paddingLeft">@dimen/option_item_horiz_spacing</item>
+        <item name="android:paddingTop">@dimen/option_item_vertical_spacing</item>
+        <item name="android:paddingRight">@dimen/option_item_horiz_spacing</item>
+        <item name="android:paddingBottom">@dimen/option_item_vertical_spacing</item>
+    </style>
+    <style name="OptionMenuTitleTextAppearance" parent="@android:style/TextAppearance.Small">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">?android:textColorTertiary</item>
     </style>
 
 </resources>

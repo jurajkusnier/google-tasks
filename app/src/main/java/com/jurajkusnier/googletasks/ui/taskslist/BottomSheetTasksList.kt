@@ -14,6 +14,7 @@ import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.jurajkusnier.googletasks.App
 import com.jurajkusnier.googletasks.R
 import com.jurajkusnier.googletasks.SharedPreferencesHelper
 import com.jurajkusnier.googletasks.db.TaskList
@@ -171,14 +172,12 @@ class BottomSheetTasksList: AppCompatDialogFragment() {
 
     companion object {
         val TAG = BottomSheetTasksList::class.java.simpleName
-        val ID_MENU_NEW = 0
-        val ID_MENU_FEEDBACK = 1
-        val MENU_LIST_ITEM_FIRST_INDEX = 2
+        const val ID_MENU_NEW = 0
+        const val ID_MENU_FEEDBACK = 1
+        const val MENU_LIST_ITEM_FIRST_INDEX = 2
     }
 
-    private val preferencesHelper: SharedPreferencesHelper by lazy {
-        SharedPreferencesHelper(context!!)
-    }
+    private val preferencesHelper = SharedPreferencesHelper.getInstance(App.applicationContext)
 
     private val viewModel:BottomSheetTasksListViewModel by lazy {
         val viewModelFactory = ViewModelFactory.getInstance(context?.applicationContext as Application)

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:icon="@drawable/ic_more"
+          android:id="@+id/action_more_options"
+          android:orderInCategory="1"
+          android:title="@string/more_options"
+          app:showAsAction="always" />
+</menu>
