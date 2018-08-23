@@ -8,7 +8,7 @@ import com.jurajkusnier.googletasks.db.TaskList
 import com.jurajkusnier.googletasks.taskslist.TasksListRepository
 import io.reactivex.disposables.Disposable
 
-class TasksViewModel(private val tasksListRepository: TasksListRepository, private val preferencesHelper: SharedPreferencesHelper): ViewModel() {
+class TasksViewModel(private val tasksListRepository: TasksListRepository, preferencesHelper: SharedPreferencesHelper): ViewModel() {
 
     private val _currentTaskList = MutableLiveData<TaskList>()
     val currentTaskList: LiveData<TaskList>
@@ -17,11 +17,13 @@ class TasksViewModel(private val tasksListRepository: TasksListRepository, priva
     private var disposable: Disposable? = null
 
     init {
-        disposable = preferencesHelper.liveSelectedTaskList.subscribe {
-            selectedTaskList -> tasksListRepository.findTasksList(selectedTaskList).subscribe {
-                _currentTaskList.postValue(it)
-            }
-        }
+        disposable  = preferencesHelper.liveSelectedTaskList
+                .flatMap {
+                    selectedTaskListId ->
+                        tasksListRepository.findTasksList(selectedTaskListId)
+                }.subscribe {
+                    selectedTaskList -> _currentTaskList.postValue(selectedTaskList)
+                }
     }
 
     override fun onCleared() {

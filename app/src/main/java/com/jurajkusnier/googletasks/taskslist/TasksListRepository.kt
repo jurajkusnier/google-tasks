@@ -5,7 +5,7 @@ import com.jurajkusnier.googletasks.db.AppDatabase
 import com.jurajkusnier.googletasks.db.TaskList
 import io.reactivex.Completable
 import io.reactivex.Flowable
-import io.reactivex.Maybe
+import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 
 class TasksListRepository private constructor(private val database:AppDatabase, private val sharedPreferencesHelper: SharedPreferencesHelper) {
@@ -24,7 +24,7 @@ class TasksListRepository private constructor(private val database:AppDatabase, 
         }
     }
 
-    fun findTasksList(id:Int): Flowable<TaskList> {
+    fun findTasksList(id:Int): Observable<TaskList> {
         return database.getTaskListDao().findTaskListsById(id)
                 .subscribeOn(Schedulers.io())
     }
