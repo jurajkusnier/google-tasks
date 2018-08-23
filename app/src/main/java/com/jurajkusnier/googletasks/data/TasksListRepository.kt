@@ -1,25 +1,23 @@
-package com.jurajkusnier.googletasks.taskslist
+package com.jurajkusnier.googletasks.data
 
-import com.jurajkusnier.googletasks.SharedPreferencesHelper
-import com.jurajkusnier.googletasks.db.AppDatabase
-import com.jurajkusnier.googletasks.db.TaskList
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 
-class TasksListRepository private constructor(private val database:AppDatabase, private val sharedPreferencesHelper: SharedPreferencesHelper) {
+class TasksListRepository private constructor(private val database:AppDatabase, private val preferencesDataStore: PreferencesDataStore) {
 
     companion object {
         val TAG = TasksListRepository::class.java.simpleName
 
         @Volatile private var instance: TasksListRepository? = null
 
-        fun getInstance(database:AppDatabase, sharedPreferencesHelper: SharedPreferencesHelper):TasksListRepository {
+        fun getInstance(database:AppDatabase, preferencesDataStore: PreferencesDataStore): TasksListRepository {
 
             return instance ?: synchronized(this) {
-                instance = TasksListRepository(database,sharedPreferencesHelper)
-                instance ?: throw IllegalAccessException("Can't instantiate class $TAG")
+                instance = TasksListRepository(database, preferencesDataStore)
+                instance
+                        ?: throw IllegalAccessException("Can't instantiate class $TAG")
             }
         }
     }
@@ -37,11 +35,13 @@ class TasksListRepository private constructor(private val database:AppDatabase, 
     fun insertTaskList(taskList: TaskList) {
         Completable.fromAction {
             val rowId = database.getTaskListDao().insert(taskList)
-            sharedPreferencesHelper.selectedTaskList = rowId.toInt()
+            preferencesDataStore.selectedTaskList = rowId.toInt()
         }.subscribeOn(Schedulers.io()).subscribe()
     }
 
     fun deleteTaskList(taskList: TaskList) {
+        preferencesDataStore.selectedTaskList = AppDatabase.FIRST_ITEM_ID
+
         Completable.fromAction {
             database.getTaskListDao().delete(taskList)
         }.subscribeOn(Schedulers.io()).subscribe()

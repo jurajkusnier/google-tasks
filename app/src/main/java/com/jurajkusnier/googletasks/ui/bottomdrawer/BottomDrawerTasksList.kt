@@ -1,6 +1,5 @@
-package com.jurajkusnier.googletasks.ui.taskslist
+package com.jurajkusnier.googletasks.ui.bottomdrawer
 
-import android.app.Application
 import android.app.Dialog
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
@@ -14,17 +13,15 @@ import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.jurajkusnier.googletasks.App
 import com.jurajkusnier.googletasks.R
-import com.jurajkusnier.googletasks.SharedPreferencesHelper
-import com.jurajkusnier.googletasks.db.TaskList
-import com.jurajkusnier.googletasks.ui.MainActivity
+import com.jurajkusnier.googletasks.data.TaskList
+import com.jurajkusnier.googletasks.ui.activity.TasksActivity
 import com.jurajkusnier.googletasks.ui.getScreenHeight
 import com.jurajkusnier.googletasks.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.navigation_view_tasks_lists.*
 import kotlin.math.roundToInt
 
-class BottomSheetTasksList: AppCompatDialogFragment() {
+class BottomDrawerTasksList: AppCompatDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
@@ -46,7 +43,7 @@ class BottomSheetTasksList: AppCompatDialogFragment() {
         var tasksLists:List<TaskList>? = null
 
         //Observe Tasks List from DB and add it to NavigationView
-        viewModel.taskList.observe(this, Observer {
+        mViewModel.taskList.observe(this, Observer {
 
             tasksLists = it
 
@@ -54,10 +51,10 @@ class BottomSheetTasksList: AppCompatDialogFragment() {
 
             menu.clear()
 
-            val selectedList = preferencesHelper.selectedTaskList
+            val selectedList = mViewModel.selectedTaskList
 
             for ((index,taskList) in  it.withIndex()) {
-                menu.add(0,index+MENU_LIST_ITEM_FIRST_INDEX,index, taskList.listName).setCheckable(true).isChecked = (taskList.id == selectedList || index == 0)
+                menu.add(0,index+ MENU_LIST_ITEM_FIRST_INDEX,index, taskList.listName).setCheckable(true).isChecked = (taskList.id == selectedList)
             }
 
             menu.add(1, ID_MENU_NEW, it.size,R.string.create_list).setIcon(R.drawable.ic_add)
@@ -115,14 +112,14 @@ class BottomSheetTasksList: AppCompatDialogFragment() {
 
             when(it.itemId) {
                 ID_MENU_NEW -> {
-                    (activity as MainActivity).showNewTaskListFragment()
+                    (activity as? TasksActivity)?.showNewTaskListFragment() ?: throw IllegalStateException("$TAG was used in wrong activity!")
                     hideBottomSheet()
                 }
                 ID_MENU_FEEDBACK -> showNotImplemented()
                 else -> {
                     val task = tasksLists?.get(it.itemId - MENU_LIST_ITEM_FIRST_INDEX)
                     if (task != null) {
-                        preferencesHelper.selectedTaskList =  task.id
+                        mViewModel.selectedTaskList = task.id
                     }
                     hideBottomSheet()
                 }
@@ -168,16 +165,14 @@ class BottomSheetTasksList: AppCompatDialogFragment() {
     }
 
     companion object {
-        val TAG = BottomSheetTasksList::class.java.simpleName
+        val TAG = BottomDrawerTasksList::class.java.simpleName
         const val ID_MENU_NEW = 0
         const val ID_MENU_FEEDBACK = 1
         const val MENU_LIST_ITEM_FIRST_INDEX = 2
     }
 
-    private val preferencesHelper = SharedPreferencesHelper.getInstance(App.applicationContext)
-
-    private val viewModel:BottomSheetTasksListViewModel by lazy {
-        val viewModelFactory = ViewModelFactory.getInstance(context?.applicationContext as Application)
-        ViewModelProviders.of(this, viewModelFactory).get(BottomSheetTasksListViewModel::class.java)
+    private val mViewModel: BottomDrawerTasksListViewModel by lazy {
+        val viewModelFactory = ViewModelFactory.getInstance(requireContext().applicationContext)
+        ViewModelProviders.of(this, viewModelFactory).get(BottomDrawerTasksListViewModel::class.java)
     }
 }

@@ -2,7 +2,7 @@ package com.jurajkusnier.googletasks.ui.taskslist
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProviders
-import com.jurajkusnier.googletasks.db.TaskList
+import com.jurajkusnier.googletasks.data.TaskList
 import kotlinx.android.synthetic.main.edit_list_fragment.*
 
 
@@ -25,10 +25,6 @@ class EditListFragment: TasksListFragment() {
         }
     }
 
-    private val viewModel:EditListFragmentViewModel by lazy {
-        ViewModelProviders.of(this).get(EditListFragmentViewModel::class.java)
-    }
-
     override fun onResume() {
         super.onResume()
 
@@ -39,10 +35,10 @@ class EditListFragment: TasksListFragment() {
         }
 
         tasksList = TaskList(listId,listName!!)
-        if (!viewModel.listNameLoaded) {
+        if (!mViewModel.listNameLoaded) {
             //Load list name only once
             edit_list_title.setText(listName)
-            viewModel.listNameLoaded = true
+            mViewModel.listNameLoaded = true
         }
     }
 

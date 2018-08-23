@@ -1,11 +1,11 @@
-package com.jurajkusnier.googletasks
+package com.jurajkusnier.googletasks.data
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import io.reactivex.Observable
 
-class SharedPreferencesHelper private constructor (context: Context) {
+class PreferencesDataStore private constructor (context: Context) {
 
     private val prefManager = PreferenceManager.getDefaultSharedPreferences(context)
 
@@ -26,32 +26,32 @@ class SharedPreferencesHelper private constructor (context: Context) {
     }
 
     companion object {
-        private val TAG = SharedPreferencesHelper::class.java.simpleName
+        private val TAG = PreferencesDataStore::class.java.simpleName
         private const val prefSelectedTaskListId = "SELECTED_TASK_LIST_ID"
         private const val prefOrderById = "ORDER_BY"
 
-        @Volatile private var instance: SharedPreferencesHelper? = null
+        @Volatile private var mInstance: PreferencesDataStore? = null
 
-        fun getInstance(context: Context): SharedPreferencesHelper {
-            return instance ?: synchronized(this) {
-                instance = SharedPreferencesHelper(context)
-                instance ?: throw IllegalAccessException("Can't instantiate class ${SharedPreferencesHelper.TAG}")
+        fun getInstance(context: Context): PreferencesDataStore {
+            return mInstance ?: synchronized(this) {
+                mInstance = PreferencesDataStore(context)
+                mInstance
+                        ?: throw IllegalAccessException("Can't instantiate class $TAG")
             }
         }
     }
 
     var selectedTaskList: Int
-        get() = prefManager.getInt(prefSelectedTaskListId, 0)
+        get() = prefManager.getInt(prefSelectedTaskListId, AppDatabase.FIRST_ITEM_ID)
         set(value) {
             prefManager.edit().putInt(prefSelectedTaskListId, value).apply()
         }
 
     var listOrder: OrderBy
-        get() = OrderBy.fromInt(prefManager.getInt(prefOrderById,OrderBy.MY_ORDER.value))
+        get() = OrderBy.fromInt(prefManager.getInt(prefOrderById, OrderBy.MY_ORDER.value))
         set(value) {
             prefManager.edit().putInt(prefOrderById,value.value).apply()
         }
-
 }
 
 enum class OrderBy(val value:Int) {
@@ -59,6 +59,6 @@ enum class OrderBy(val value:Int) {
     DATE(1);
 
     companion object {
-        fun fromInt(i:Int):OrderBy = if (i == 1) DATE else MY_ORDER
+        fun fromInt(i:Int): OrderBy = if (i == 1) DATE else MY_ORDER
     }
 }

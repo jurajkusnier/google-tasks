@@ -1,46 +1,60 @@
 package com.jurajkusnier.googletasks.viewmodel
 
-import android.app.Application
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.jurajkusnier.googletasks.SharedPreferencesHelper
+import com.jurajkusnier.googletasks.data.PreferencesDataStore
+import com.jurajkusnier.googletasks.data.TasksListRepository
 import com.jurajkusnier.googletasks.di.Injection
+import com.jurajkusnier.googletasks.ui.activity.MainActivityViewModel
+import com.jurajkusnier.googletasks.ui.bottombarmenu.BottomBarMenuViewModel
+import com.jurajkusnier.googletasks.ui.bottomdrawer.BottomDrawerTasksListViewModel
 import com.jurajkusnier.googletasks.ui.tasks.TasksViewModel
-import com.jurajkusnier.googletasks.ui.taskslist.BottomBarMenuViewModel
-import com.jurajkusnier.googletasks.ui.taskslist.BottomSheetTasksListViewModel
+import com.jurajkusnier.googletasks.ui.taskslist.ListFragmentViewModel
 
-class ViewModelFactory(private val context: Application): ViewModelProvider.Factory {
+class ViewModelFactory(
+        private val tasksListRepository:TasksListRepository,
+        private val preferencesDataStore: PreferencesDataStore
+        ): ViewModelProvider.Factory {
 
     companion object {
         val TAG = ViewModelFactory::class.java.simpleName
 
         @Volatile private var instance: ViewModelFactory? = null
 
-        fun getInstance(context: Application):ViewModelFactory {
+        fun getInstance(context: Context):ViewModelFactory {
             return instance ?: synchronized(this) {
-                instance = ViewModelFactory(context)
+
+                val tasksListRepository = Injection.provideTaskListRespository(context)
+                val preferencesDataStore = PreferencesDataStore.getInstance(context)
+
+                instance = ViewModelFactory(tasksListRepository,preferencesDataStore)
                 instance ?: throw IllegalAccessException("Can't instantiate class $TAG")
             }
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
 
-        if (modelClass.isAssignableFrom(BottomSheetTasksListViewModel::class.java)) {
-            val tasksListRepository = Injection.provideTaskListRespository(context)
-            return BottomSheetTasksListViewModel(tasksListRepository) as T
+        if (modelClass.isAssignableFrom(BottomDrawerTasksListViewModel::class.java)) {
+            return BottomDrawerTasksListViewModel(tasksListRepository, preferencesDataStore) as T
         }
 
         if (modelClass.isAssignableFrom(BottomBarMenuViewModel::class.java)) {
-            val tasksListRepository = Injection.provideTaskListRespository(context)
-            val preferencesHelper = SharedPreferencesHelper.getInstance(context)
-            return BottomBarMenuViewModel(tasksListRepository, preferencesHelper) as T
+            return BottomBarMenuViewModel(tasksListRepository, preferencesDataStore) as T
         }
 
         if (modelClass.isAssignableFrom(TasksViewModel::class.java)) {
-            val tasksListRepository = Injection.provideTaskListRespository(context)
-            val preferencesHelper = SharedPreferencesHelper.getInstance(context)
-            return TasksViewModel(tasksListRepository, preferencesHelper) as T
+            return TasksViewModel(tasksListRepository, preferencesDataStore) as T
+        }
+
+        if (modelClass.isAssignableFrom(ListFragmentViewModel::class.java)) {
+            return ListFragmentViewModel(tasksListRepository) as T
+        }
+
+        if (modelClass.isAssignableFrom(MainActivityViewModel::class.java)) {
+            return MainActivityViewModel(tasksListRepository) as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")

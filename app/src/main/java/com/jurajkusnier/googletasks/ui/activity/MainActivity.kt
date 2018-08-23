@@ -1,4 +1,4 @@
-package com.jurajkusnier.googletasks.ui
+package com.jurajkusnier.googletasks.ui.activity
 
 import android.os.Bundle
 import android.util.Log
@@ -6,14 +6,22 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.snackbar.Snackbar
 import com.jurajkusnier.googletasks.R
-import com.jurajkusnier.googletasks.db.TaskList
+import com.jurajkusnier.googletasks.data.TaskList
+import com.jurajkusnier.googletasks.ui.bottombarmenu.BottomBarMenu
+import com.jurajkusnier.googletasks.ui.bottomdrawer.BottomDrawerTasksList
 import com.jurajkusnier.googletasks.ui.tasks.TasksFragment
-import com.jurajkusnier.googletasks.ui.taskslist.*
+import com.jurajkusnier.googletasks.ui.taskslist.AddListFragment
+import com.jurajkusnier.googletasks.ui.taskslist.EditListFragment
+import com.jurajkusnier.googletasks.ui.taskslist.TasksListFragment
+import com.jurajkusnier.googletasks.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(){
+class MainActivity : AppCompatActivity(),TasksActivity {
 
     val TAG = MainActivity::class.java.simpleName
 
@@ -31,7 +39,7 @@ class MainActivity : AppCompatActivity(){
 
         if (currentFragment == null) {
             val transaction = supportFragmentManager.beginTransaction()
-            val tasksFragment =TasksFragment()
+            val tasksFragment = TasksFragment()
             transaction.replace(R.id.fragment_container, tasksFragment)
             transaction.addToBackStack(null)
             transaction.commit()
@@ -63,11 +71,11 @@ class MainActivity : AppCompatActivity(){
         Log.d(TAG,"onOptionsItemSelected($item)")
         return when (item?.itemId) {
             android.R.id.home -> {
-                BottomSheetTasksList().show(supportFragmentManager, BottomSheetTasksList.TAG)
+                BottomDrawerTasksList().show(supportFragmentManager, BottomDrawerTasksList.TAG)
                 true
             }
             R.id.action_more_options -> {
-                BottomBarMenu().show(supportFragmentManager,BottomBarMenu.TAG)
+                BottomBarMenu().show(supportFragmentManager, BottomBarMenu.TAG)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -86,12 +94,12 @@ class MainActivity : AppCompatActivity(){
     }
 
 
-    fun showNewTaskListFragment() {
+    override fun showNewTaskListFragment() {
         val addListFragment = AddListFragment()
         showTaskListFragment(addListFragment )
     }
 
-    fun showEditTaskListFragment(taskList: TaskList) {
+    override fun showEditTaskListFragment(taskList: TaskList) {
         val editListFragment = EditListFragment.getInstance(taskList)
         showTaskListFragment(editListFragment)
     }
@@ -139,6 +147,31 @@ class MainActivity : AppCompatActivity(){
     private fun showBottomAppBar() {
         bottom_app_bar_shadow.visibility = View.VISIBLE
         bottomBar.visibility = View.VISIBLE
+    }
+
+    override fun showUndoSnackbar(taskList: TaskList) {
+
+        val coordinatorView = findViewById<CoordinatorLayout>(R.id.mainCoordinatorLayout)
+        if (coordinatorView == null) {
+            Log.e(BottomBarMenu.TAG,"Can't show undo snackbar. CoordinatorLayout not found")
+            return
+        }
+
+        val snackbar = Snackbar.make(coordinatorView,getString(R.string.operation_task_list_deleted), Snackbar.LENGTH_LONG)
+        snackbar.setAction(getString(R.string.undo)) {
+            viewModel.insertTaskList(taskList)
+        }
+        val snackBarView = snackbar.view
+        val params = snackBarView.layoutParams as CoordinatorLayout.LayoutParams
+        params.bottomMargin = resources.getDimension(R.dimen.snackbar_bottom_margin).toInt()
+
+        snackBarView.layoutParams = params
+        snackbar.show()
+    }
+
+    private val viewModel by lazy {
+        val viewModelFactory = ViewModelFactory.getInstance(applicationContext)
+        ViewModelProviders.of(this,viewModelFactory).get(MainActivityViewModel::class.java)
     }
 
 

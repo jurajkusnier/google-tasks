@@ -1,4 +1,4 @@
-package com.jurajkusnier.googletasks.db
+package com.jurajkusnier.googletasks.data
 
 import androidx.room.*
 import io.reactivex.Flowable

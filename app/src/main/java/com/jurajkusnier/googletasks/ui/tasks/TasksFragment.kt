@@ -1,6 +1,5 @@
 package com.jurajkusnier.googletasks.ui.tasks
 
-import android.app.Application
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.jurajkusnier.googletasks.App
 import com.jurajkusnier.googletasks.R
 import com.jurajkusnier.googletasks.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.tasks_fragment_layout.*
@@ -20,7 +18,7 @@ class TasksFragment:Fragment() {
     }
 
     private val viewModel by lazy {
-        val viewModelFactory = ViewModelFactory.getInstance(App.applicationContext as Application)
+        val viewModelFactory = ViewModelFactory.getInstance(requireContext().applicationContext)
         ViewModelProviders.of(this,viewModelFactory).get(TasksViewModel::class.java)
     }
 

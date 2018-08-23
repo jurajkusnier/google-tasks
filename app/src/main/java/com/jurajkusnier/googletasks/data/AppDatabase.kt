@@ -1,4 +1,4 @@
-package com.jurajkusnier.googletasks.db
+package com.jurajkusnier.googletasks.data
 
 import android.content.Context
 import androidx.room.Database

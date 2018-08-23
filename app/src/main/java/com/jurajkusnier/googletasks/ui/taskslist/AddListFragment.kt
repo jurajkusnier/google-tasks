@@ -1,6 +1,6 @@
 package com.jurajkusnier.googletasks.ui.taskslist
 
-import com.jurajkusnier.googletasks.db.TaskList
+import com.jurajkusnier.googletasks.data.TaskList
 import kotlinx.android.synthetic.main.edit_list_fragment.*
 
 class AddListFragment:TasksListFragment() {

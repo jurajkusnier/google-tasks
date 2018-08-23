@@ -1,13 +1,14 @@
-package com.jurajkusnier.googletasks.ui.taskslist
+package com.jurajkusnier.googletasks.ui.bottomdrawer
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.jurajkusnier.googletasks.db.TaskList
-import com.jurajkusnier.googletasks.taskslist.TasksListRepository
+import com.jurajkusnier.googletasks.data.PreferencesDataStore
+import com.jurajkusnier.googletasks.data.TaskList
+import com.jurajkusnier.googletasks.data.TasksListRepository
 import io.reactivex.disposables.Disposable
 
-class BottomSheetTasksListViewModel(val tasksListRepository: TasksListRepository) : ViewModel() {
+class BottomDrawerTasksListViewModel(private val tasksListRepository: TasksListRepository, private val preferencesDataStore: PreferencesDataStore) : ViewModel() {
 
     private val _tasksList:MutableLiveData<List<TaskList>> = MutableLiveData()
     val taskList:LiveData<List<TaskList>>
@@ -21,13 +22,9 @@ class BottomSheetTasksListViewModel(val tasksListRepository: TasksListRepository
         }
     }
 
-    fun insertTaskList(taskList: TaskList) {
-        tasksListRepository.insertTaskList(taskList)
-    }
-
-    fun deleteTaskList(taskList:TaskList) {
-        tasksListRepository.deleteTaskList(taskList)
-    }
+    var selectedTaskList
+        get() = preferencesDataStore.selectedTaskList
+        set(value) { preferencesDataStore.selectedTaskList = value }
 
     override fun onCleared() {
         disposable?.dispose()

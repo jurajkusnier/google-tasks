@@ -4,10 +4,10 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4
-import com.jurajkusnier.googletasks.db.AppDatabase
-import com.jurajkusnier.googletasks.db.Subtask
-import com.jurajkusnier.googletasks.db.Task
-import com.jurajkusnier.googletasks.db.TaskList
+import com.jurajkusnier.googletasks.data.AppDatabase
+import com.jurajkusnier.googletasks.data.Subtask
+import com.jurajkusnier.googletasks.data.Task
+import com.jurajkusnier.googletasks.data.TaskList
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
