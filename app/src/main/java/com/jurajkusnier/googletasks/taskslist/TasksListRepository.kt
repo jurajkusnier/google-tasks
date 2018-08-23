@@ -24,7 +24,7 @@ class TasksListRepository private constructor(private val database:AppDatabase, 
         }
     }
 
-    fun findTasksList(id:Int): Maybe<TaskList> {
+    fun findTasksList(id:Int): Flowable<TaskList> {
         return database.getTaskListDao().findTaskListsById(id)
                 .subscribeOn(Schedulers.io())
     }
