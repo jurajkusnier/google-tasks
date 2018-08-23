@@ -1,9 +1,29 @@
 package com.jurajkusnier.googletasks
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import io.reactivex.Observable
 
 class SharedPreferencesHelper private constructor (context: Context) {
+
+    private val prefManager = PreferenceManager.getDefaultSharedPreferences(context)
+
+    val liveSelectedTaskList = Observable.create<Int> { emitter ->
+
+        val preferencesChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
+            if (key == prefSelectedTaskListId) {
+                emitter.onNext(selectedTaskList)
+            }
+        }
+
+        emitter.setCancellable {
+            prefManager.unregisterOnSharedPreferenceChangeListener(preferencesChangeListener)
+        }
+
+        emitter.onNext(selectedTaskList)
+        prefManager.registerOnSharedPreferenceChangeListener(preferencesChangeListener)
+    }
 
     companion object {
         private val TAG = SharedPreferencesHelper::class.java.simpleName
@@ -19,8 +39,6 @@ class SharedPreferencesHelper private constructor (context: Context) {
             }
         }
     }
-
-    private val prefManager = PreferenceManager.getDefaultSharedPreferences(context)
 
     var selectedTaskList: Int
         get() = prefManager.getInt(prefSelectedTaskListId, 0)

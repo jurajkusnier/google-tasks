@@ -6,8 +6,10 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.jurajkusnier.googletasks.R
 import com.jurajkusnier.googletasks.db.TaskList
+import com.jurajkusnier.googletasks.ui.tasks.TasksFragment
 import com.jurajkusnier.googletasks.ui.taskslist.*
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -26,11 +28,29 @@ class MainActivity : AppCompatActivity(){
 
         //Setup toolbars for currently loaded fragment
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
-        if (currentFragment is TasksListFragment) {
-            hideBottomAppBar()
-            showTaskListToolbar(currentFragment)
+
+        if (currentFragment == null) {
+            val transaction = supportFragmentManager.beginTransaction()
+            val tasksFragment =TasksFragment()
+            transaction.replace(R.id.fragment_container, tasksFragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
+            setupToolbarsForFragment(tasksFragment)
         } else {
-            showBottomAppBar()
+            setupToolbarsForFragment(currentFragment)
+        }
+    }
+
+    private fun setupToolbarsForFragment(fragment:Fragment) {
+        when (fragment) {
+            is TasksListFragment -> {
+                hideBottomAppBar()
+                showTaskListToolbar(fragment)
+            }
+            is TasksFragment -> {
+                showBottomAppBar()
+                hideTaskListToolbar()
+            }
         }
     }
 
@@ -57,8 +77,12 @@ class MainActivity : AppCompatActivity(){
     override fun onBackPressed() {
         super.onBackPressed()
 
-        toolbar.visibility = View.GONE
-        showBottomAppBar()
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+        if (currentFragment == null) {
+            finish()
+        } else {
+            setupToolbarsForFragment(currentFragment)
+        }
     }
 
 
@@ -80,6 +104,10 @@ class MainActivity : AppCompatActivity(){
         transaction.replace(R.id.fragment_container, tasksListFragment)
         transaction.addToBackStack(null)
         transaction.commit()
+    }
+
+    private fun hideTaskListToolbar() {
+        toolbar.visibility = View.GONE
     }
 
     private fun showTaskListToolbar(fragment:TasksListFragment) {

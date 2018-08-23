@@ -122,9 +122,6 @@ class BottomSheetTasksList: AppCompatDialogFragment() {
                 else -> {
                     val task = tasksLists?.get(it.itemId - MENU_LIST_ITEM_FIRST_INDEX)
                     if (task != null) {
-                        //TODO: edit task list only for testing
-                        (activity as MainActivity).showEditTaskListFragment(task)
-
                         preferencesHelper.selectedTaskList =  task.id
                     }
                     hideBottomSheet()
